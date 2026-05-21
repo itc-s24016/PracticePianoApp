@@ -13,6 +13,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.practicepianoapp.ui.theme.PracticePianoAppTheme
 
+import android.media.MediaPlayer
+import androidx.compose.material3.Button
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,10 +25,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             PracticePianoAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    Main(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
@@ -31,17 +33,24 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+fun Main(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    val mediaPlayer = remember { MediaPlayer.create(context, R.raw.c1) }
+
+    Button(
+        modifier = modifier,
+        onClick = {
+            mediaPlayer.seekTo(0)
+            mediaPlayer.start()
+        }){
+        Text(text = "C")
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+fun MainPreview() {
     PracticePianoAppTheme {
-        Greeting("Android")
+        Main()
     }
 }
