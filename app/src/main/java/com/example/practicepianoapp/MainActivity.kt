@@ -32,6 +32,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.foundation.layout.Spacer
+import android.media.AudioAttributes
+import android.media.AudioAttributes.CONTENT_TYPE_MUSIC
+import android.media.AudioAttributes.USAGE_GAME
+import android.media.SoundPool
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateListOf
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,29 +63,43 @@ fun Main(modifier: Modifier = Modifier) {
         listOf(R.raw.c1s, R.raw.d1s, null, R.raw.f1s, R.raw.g1s, R.raw.a1s, null)
     }
 
-    val whiteKeys = remember {
-        whiteRawIds.map { id ->
-            MediaPlayer.create(context, id)
-        }
+    val soundPool = remember {
+        SoundPool.Builder()
+            .setMaxStreams(10)
+            .setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setUsage(USAGE_GAME)
+                    .setContentType(CONTENT_TYPE_MUSIC)
+                    .build()
+            )
+            .build()
     }
-    val blackKeys = remember {
-        blackRawIds.map { id ->
-            id?.let {
-                MediaPlayer.create(context, it)
+
+    val whiteKeys = remember { mutableStateListOf<Int>() }
+    val blackKeys = remember { mutableStateListOf<Int?>() }
+
+    LaunchedEffect(Unit) {
+        whiteRawIds.forEach { id ->
+            whiteKeys.add(soundPool.load(context, id, 1))
+        }
+        blackRawIds.forEach { id ->
+            if (id != null) {
+                blackKeys.add(soundPool.load(context, id, 1))
+            } else {
+                blackKeys.add(null)
             }
         }
     }
 
     DisposableEffect(Unit) {
         onDispose {
-            whiteKeys.forEach { it.release() }
-            blackKeys.forEach { it?.release() }
+            soundPool.release()
         }
     }
 
     Box(modifier = modifier.fillMaxSize()) {
         Row(modifier = Modifier.fillMaxSize()) {
-            whiteKeys.forEach { mediaPlayer ->
+            whiteKeys.forEach { soundId ->
                 KeyBox(
                     modifier = Modifier
                         .padding(1.dp)
@@ -88,15 +108,14 @@ fun Main(modifier: Modifier = Modifier) {
                     normalColor = Color.White,
                     pressedColor = Color.LightGray,
                     onPlay = {
-                        mediaPlayer.seekTo(0)
-                        mediaPlayer.start()
+                        soundPool.play(soundId, 1f, 1f, 0, 0, 1f)
                     }
                 )
             }
         }
         Row(modifier = Modifier.fillMaxSize()) {
-            blackKeys.forEach { mediaPlayer ->
-                if (mediaPlayer == null) {
+            blackKeys.forEach { soundId ->
+                if (soundId == null) {
                     Spacer(modifier = Modifier.weight(0.5f))
                 } else {
                     KeyBox(
@@ -107,8 +126,7 @@ fun Main(modifier: Modifier = Modifier) {
                         normalColor = Color.Black,
                         pressedColor = Color.Gray,
                         onPlay = {
-                            mediaPlayer.seekTo(0)
-                            mediaPlayer.start()
+                            soundPool.play(soundId, 1f, 1f, 0, 0, 1f)
                         }
                     )
                 }
