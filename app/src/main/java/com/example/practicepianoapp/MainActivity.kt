@@ -25,6 +25,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.input.pointer.pointerInput
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,20 +68,49 @@ fun Main(modifier: Modifier = Modifier) {
     Box(modifier = modifier.fillMaxSize()) {
         Row(modifier = Modifier.fillMaxSize()) {
             whiteKeys.forEach { mediaPlayer ->
-                Box(
+                KeyBox(
                     modifier = Modifier
                         .padding(1.dp)
                         .weight(1f)
-                        .fillMaxHeight()
-                        .border(1.dp, Color.Gray)
-                        .clickable {
-                            mediaPlayer.seekTo(0)
-                            mediaPlayer.start()
-                        }
+                        .fillMaxHeight(),
+                    normalColor = Color.White,
+                    pressedColor = Color.LightGray,
+                    onPlay = {
+                        mediaPlayer.seekTo(0)
+                        mediaPlayer.start()
+                    }
                 )
             }
         }
     }
+}
+
+@Composable
+fun KeyBox(
+    modifier: Modifier = Modifier,
+    normalColor: Color,
+    pressedColor: Color,
+    onPlay: () -> Unit
+) {
+    var pressed by remember { mutableStateOf(false) }
+    Box(
+        modifier = modifier
+            .border(1.dp, Color.Gray)
+            .background(if (pressed) pressedColor else normalColor)
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onPress = {
+                        pressed = true
+                        onPlay()
+                        try {
+                            awaitRelease()
+                        } finally {
+                            pressed = false
+                        }
+                    }
+                )
+            }
+    )
 }
 
 @Preview(showBackground = true)
