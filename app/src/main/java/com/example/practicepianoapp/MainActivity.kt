@@ -56,13 +56,18 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Main(modifier: Modifier = Modifier) {
     val context = LocalContext.current
+
+    // 白・黒の鍵盤の音源定義
+    // ド レ ミ ファ ソ ラ シ ド
     val whiteRawIds = remember {
         listOf(R.raw.c1, R.raw.d1, R.raw.e1, R.raw.f1, R.raw.g1, R.raw.a1, R.raw.b1, R.raw.c2)
     }
+    // ド# レ# null ファ# ソ# ラ# null
     val blackRawIds = remember {
         listOf(R.raw.c1s, R.raw.d1s, null, R.raw.f1s, R.raw.g1s, R.raw.a1s, null)
     }
 
+    // Sound Pool の初期化
     val soundPool = remember {
         SoundPool.Builder()
             .setMaxStreams(10)
@@ -78,6 +83,7 @@ fun Main(modifier: Modifier = Modifier) {
     val whiteKeys = remember { mutableStateListOf<Int>() }
     val blackKeys = remember { mutableStateListOf<Int?>() }
 
+    // 白・黒の鍵盤の音源IDを返す
     LaunchedEffect(Unit) {
         whiteRawIds.forEach { id ->
             whiteKeys.add(soundPool.load(context, id, 1))
@@ -91,12 +97,14 @@ fun Main(modifier: Modifier = Modifier) {
         }
     }
 
+    // SoundPool のリソースを解放する
     DisposableEffect(Unit) {
         onDispose {
             soundPool.release()
         }
     }
 
+    // 白・黒健のレイアウト
     Box(modifier = modifier.fillMaxSize()) {
         Row(modifier = Modifier.fillMaxSize()) {
             whiteKeys.forEach { soundId ->
@@ -136,6 +144,7 @@ fun Main(modifier: Modifier = Modifier) {
     }
 }
 
+// 一つの鍵盤
 @Composable
 fun KeyBox(
     modifier: Modifier = Modifier,
@@ -154,7 +163,7 @@ fun KeyBox(
                         pressed = true
                         onPlay()
                         try {
-                            awaitRelease()
+                            awaitRelease() // 指を話すまで待機
                         } finally {
                             pressed = false
                         }
