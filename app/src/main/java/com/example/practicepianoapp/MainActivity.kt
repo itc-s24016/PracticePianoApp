@@ -31,6 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.foundation.layout.Spacer
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,16 +53,27 @@ fun Main(modifier: Modifier = Modifier) {
     val whiteRawIds = remember {
         listOf(R.raw.c1, R.raw.d1, R.raw.e1, R.raw.f1, R.raw.g1, R.raw.a1, R.raw.b1, R.raw.c2)
     }
+    val blackRawIds = remember {
+        listOf(R.raw.c1s, R.raw.d1s, null, R.raw.f1s, R.raw.g1s, R.raw.a1s, null)
+    }
 
     val whiteKeys = remember {
         whiteRawIds.map { id ->
             MediaPlayer.create(context, id)
         }
     }
+    val blackKeys = remember {
+        blackRawIds.map { id ->
+            id?.let {
+                MediaPlayer.create(context, it)
+            }
+        }
+    }
 
     DisposableEffect(Unit) {
         onDispose {
             whiteKeys.forEach { it.release() }
+            blackKeys.forEach { it?.release() }
         }
     }
 
@@ -81,6 +93,27 @@ fun Main(modifier: Modifier = Modifier) {
                     }
                 )
             }
+        }
+        Row(modifier = Modifier.fillMaxSize()) {
+            blackKeys.forEach { mediaPlayer ->
+                if (mediaPlayer == null) {
+                    Spacer(modifier = Modifier.weight(0.5f))
+                } else {
+                    KeyBox(
+                        modifier = Modifier
+                            .padding(15.dp, 1.dp, 15.dp, 0.dp)
+                            .weight(1f)
+                            .fillMaxHeight(0.55f),
+                        normalColor = Color.Black,
+                        pressedColor = Color.Gray,
+                        onPlay = {
+                            mediaPlayer.seekTo(0)
+                            mediaPlayer.start()
+                        }
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.weight(0.5f))
         }
     }
 }
