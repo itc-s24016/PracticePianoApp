@@ -7,3 +7,5 @@
  
 
 ## 鍵盤を押したとき  
+<img width="741" height="328" alt="image" src="https://github.com/user-attachments/assets/fe467aba-05a9-4143-b8fb-edbf6885e93c" />  
+<img width="741" height="328" alt="image" src="https://github.com/user-attachments/assets/de38d6c9-01d9-406a-b45d-59d1748eae0a" />
