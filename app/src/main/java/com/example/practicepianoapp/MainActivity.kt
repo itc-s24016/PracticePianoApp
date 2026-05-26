@@ -116,15 +116,16 @@ fun Main(modifier: Modifier = Modifier) {
                     normalColor = Color.White,
                     pressedColor = Color.LightGray,
                     onPlay = {
-                        soundPool.play(soundId, 1f, 1f, 0, 0, 1f)
+                        soundPool.play(soundId, 1f, 1f, 1, 0, 1f)
                     }
                 )
             }
         }
         Row(modifier = Modifier.fillMaxSize()) {
+            Spacer(modifier = Modifier.weight(0.5f))
             blackKeys.forEach { soundId ->
                 if (soundId == null) {
-                    Spacer(modifier = Modifier.weight(0.5f))
+                    Spacer(modifier = Modifier.weight(1f))
                 } else {
                     KeyBox(
                         modifier = Modifier
@@ -134,7 +135,7 @@ fun Main(modifier: Modifier = Modifier) {
                         normalColor = Color.Black,
                         pressedColor = Color.Gray,
                         onPlay = {
-                            soundPool.play(soundId, 1f, 1f, 0, 0, 1f)
+                            soundPool.play(soundId, 1f, 1f, 1, 0, 1f)
                         }
                     )
                 }
