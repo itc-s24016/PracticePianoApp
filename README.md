@@ -2,10 +2,8 @@
 ## Android Studio で Kotlin
 ### 目的：音声再生とUIの重なり、コードの部品化を学ぶ
 ## 最初の画面(横・縦)  
-<img width="785" height="351" alt="image" src="https://github.com/user-attachments/assets/5f2fe8e3-3110-4edd-a3ac-d10f43bb097f" />  
-<img width="382" height="853" alt="image" src="https://github.com/user-attachments/assets/90c76975-05ea-4ce1-bae5-bd553698eec1" />  
+<img width="712" height="317" alt="image" src="https://github.com/user-attachments/assets/dc6f7329-de9e-4dea-b4fc-28dce59bb20d" />  
+<img width="378" height="843" alt="image" src="https://github.com/user-attachments/assets/184f9e87-748d-4dd4-9c95-fdd5dffa1894" />  
+ 
 
 ## 鍵盤を押したとき  
-<img width="785" height="351" alt="image" src="https://github.com/user-attachments/assets/9503f983-e0ee-43d0-bce6-2e454ccab56f" />  
-
-<img width="785" height="351" alt="image" src="https://github.com/user-attachments/assets/138053a0-3878-4833-b7e2-15eef6e7a94a" />  
